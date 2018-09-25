@@ -61,7 +61,7 @@ Dancer.prototype._moveIntoLine = function() {
   var currentPosition = this.stepHistory[this.stepHistory.currentIndex];
   var nextTop = (currentPosition.top - this.linePosition.top) * 0.9 + this.linePosition.top;
   var nextLeft = (currentPosition.left - this.linePosition.left) * 0.9 + this.linePosition.left;
-  this._silentSetPosition(nextTop, nextLeft);
+  this.setPosition(nextTop, nextLeft);
 }
 
 Dancer.prototype.lineUp = function(targetPosition) {
@@ -79,6 +79,13 @@ Dancer.prototype.lineUp = function(targetPosition) {
   if (this.$node.hasClass("follower")) {
     this.step();
   }
+}
+
+Dancer.prototype.breakLine = function() {
+  delete this._positionHolder;
+  delete this.linePosition;
+  this.step = this._stepHolder;
+  delete this._stepHolder;
 }
 
 Dancer.prototype._silentSetPosition = function(top, left) {
