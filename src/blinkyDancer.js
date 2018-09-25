@@ -19,7 +19,7 @@
 // };
 
 var BlinkyDancer = function(top, left, timeBetweenSteps) {
-  this.oldStep = Dancer.prototype.step;
+  //this.oldStep = Dancer.prototype.step;
   Dancer.call(this, top, left, timeBetweenSteps);
 };
 
@@ -34,7 +34,11 @@ BlinkyDancer.prototype.step = function() {
 
 
 
-var makeBlinkyDancer = function(top, left, timeBetweenSteps) {
-  var newDancer = new BlinkyDancer(top, left, timeBetweenSteps);
+var makeBlinkyDancer = function() {
+  var newDancer = new BlinkyDancer(      
+      $("body").height() * Math.random(),
+      $("body").width() * Math.random(),
+      Math.random() * 1000,
+      );
   return newDancer;
 };
