@@ -11,13 +11,9 @@ LissajousTracer.prototype.constructor = LissajousTracer;
 LissajousTracer.prototype.step = function() {
   this.oldStep();
   if (this.currentParameter !== undefined) {
-    this.currentParameter += 0.02;
-    if (this.currentParameter > 6.5) {
-      this.currentParameter -= 2 * Math.PI;
-    }
-    var newTop = Math.sin(this.verticalFreq * this.currentParameter) * 0.4 * $("body").height() + 0.5 * $("body").height();
-    var newLeft = Math.sin(this.horizontalFreq * this.currentParameter) * 0.4 * $("body").width() + 0.5 * $("body").width();
-    this.setPosition(newTop, newLeft);
+    var newPos = this.findAbsolutePosition();    
+    this.setPosition(newPos.top, newPos.left);
+    this.$node.css("border-color", "hsl(" + Math.floor(this.currentParameter*360/(2*Math.PI)) + ", 100%, 50%)");
   }
 }
 
@@ -28,17 +24,13 @@ LissajousTracer.prototype.breakLine = function() {
   this.step = function() {
     this.oldStep();
     if (this.currentParameter !== undefined) {
-      this.currentParameter += 0.02;
-      if (this.currentParameter > 6.5) {
-        this.currentParameter -= 2 * Math.PI;
-      }
-      var newTop = Math.sin(this.verticalFreq * this.currentParameter) * 0.4 * $("body").height() + 0.5 * $("body").height();
-      var newLeft = Math.sin(this.horizontalFreq * this.currentParameter) * 0.4 * $("body").width() + 0.5 * $("body").width();
+      var newPos = this.findAbsolutePosition();
       var currentPosition = this.getPosition();
-      newTop = currentPosition.top + (newTop - currentPosition.top) * 0.01 * (50 - this.delayCounter);
-      newLeft = currentPosition.left + (newLeft - currentPosition.left) * 0.01 * (50 - this.delayCounter);;
+      newPos.top = currentPosition.top + (newPos.top - currentPosition.top) * 0.01 * (50 - this.delayCounter);
+      newPos.left = currentPosition.left + (newPos.left - currentPosition.left) * 0.01 * (50 - this.delayCounter);;
  
-      this.setPosition(newTop, newLeft);
+      this.setPosition(newPos.top, newPos.left);
+      this.$node.css("border-color", "hsl(" + Math.floor(this.currentParameter*360/(2*Math.PI)) + ", 100%, 50%)");
     }
     this.delayCounter--;
     if (this.delayCounter === 0) {
@@ -46,6 +38,16 @@ LissajousTracer.prototype.breakLine = function() {
       delete this.stepHolder;
     }
   };
+}
+
+LissajousTracer.prototype.findAbsolutePosition = function() {
+  this.currentParameter += 0.02;
+  if (this.currentParameter > 6.5) {
+    this.currentParameter -= 2 * Math.PI;
+  }
+  var newTop = Math.sin(this.verticalFreq * this.currentParameter) * 0.4 * $("body").height() + 0.5 * $("body").height();
+  var newLeft = Math.sin(this.horizontalFreq * this.currentParameter) * 0.4 * $("body").width() + 0.5 * $("body").width();
+  return {top: newTop, left: newLeft};
 }
 
 var makeLissajousTracer = function() {
