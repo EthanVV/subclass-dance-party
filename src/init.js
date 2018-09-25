@@ -58,6 +58,32 @@ $(document).ready(function() {
     window.isLinedUp = false;
     }
   });
+
+  $('.activeCycler').on('click', function(event) {
+    if (dancers.length > 0 && !isLinedUp){
+      var activeIndex;
+      if (currentActive === null) {
+        activeIndex = 0;
+      } else {
+        for(var i = 0; i < dancers.length && activeIndex === undefined; i++) {
+          if (currentActive === dancers[i]) {
+            activeIndex = i + 1;
+          }
+        }
+      }
+      var newIndex;
+      for (var i = activeIndex; i < dancers.length && newIndex === undefined; i++) {
+        if (dancers[i].$node.hasClass("head")) {
+          newIndex = i;
+        }
+      }
+      clearActive();
+      if (newIndex !== undefined) {
+        currentActive = dancers[newIndex];
+        currentActive.$node.addClass("active");
+      }
+    } 
+  });
 });
 
 var clearActive = function() {

@@ -4,6 +4,7 @@ var RainbowBouncer = function(top, left, velocity, startingHue) {
   Dancer.call(this, top, left, 20);
   this.velocity = velocity;
   this.changeColor(startingHue);
+  this.$node.addClass("head");
 };
 
 RainbowBouncer.prototype = Object.create(Dancer.prototype);

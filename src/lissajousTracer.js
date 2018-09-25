@@ -3,6 +3,8 @@ var LissajousTracer = function(verticalFreq, horizontalFreq) {
   this.verticalFreq = verticalFreq;
   this.horizontalFreq = horizontalFreq;
   this.currentParameter = 0.5;
+  this.phaseShift = 0;
+  this.$node.addClass("head");
 }
 
 LissajousTracer.prototype = Object.create(Dancer.prototype);
@@ -46,7 +48,7 @@ LissajousTracer.prototype.findAbsolutePosition = function() {
     this.currentParameter -= 2 * Math.PI;
   }
   var newTop = Math.sin(this.verticalFreq * this.currentParameter) * 0.4 * $("body").height() + 0.5 * $("body").height();
-  var newLeft = Math.sin(this.horizontalFreq * this.currentParameter) * 0.4 * $("body").width() + 0.5 * $("body").width();
+  var newLeft = Math.sin(this.horizontalFreq * (this.currentParameter + 2 * Math.PI * this.phaseShift)) * 0.4 * $("body").width() + 0.5 * $("body").width();
   return {top: newTop, left: newLeft};
 }
 
