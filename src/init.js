@@ -1,5 +1,6 @@
 $(document).ready(function() {
   window.dancers = [];
+  window.currentActive = null;
 
   $('.addDancerButton').on('click', function(event) {
     /* This function sets up the click handlers for the create-dancer
@@ -23,7 +24,29 @@ $(document).ready(function() {
     // make a dancer with a random position
 
     var dancer = dancerMakerFunction();
+    window.dancers.push(dancer);
     $('body').append(dancer.$node);
+  });
+  
+  $('.lineupButton').on('click', function(event) {
+    var numHeads = 0;
+    for (var i = 0; i < window.dancers.length; i++) {
+      var currentDancer = window.dancers[i];
+      if (currentDancer.$node.hasClass("follower")) {
+        var leaderTargetPos = currentDancer.directLeader.linePosition;
+        currentDancer.lineUp({top:leaderTargetPos.top + 30, left:leaderTargetPos.left});
+        
+      } else {
+        currentDancer.lineUp({top:50, left:50 + 30 * numHeads});
+        numHeads++;
+      }
+    }
   });
 });
 
+var clearActive = function() {
+  window.currentActive = null;
+  for(var i = 0; i < window.dancers.length; i++) {
+    window.dancers[i].$node.removeClass("active");
+  }
+}

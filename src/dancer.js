@@ -35,23 +35,60 @@ var Dancer = function(top, left, timeBetweenSteps) {
   
   this.oldStep = Dancer.prototype.step;
   this.$node = $('<span class="dancer"></span>');
+  this.directFollower = null;
   this.timeBetweenSteps = timeBetweenSteps;
-  this.step();
   this.stepHistory = {
      positions: [],
      currentIndex: 0,
   };
   this._initHistory(top, left);
+  this.oldStep();
   this.setPosition(top, left);
-
+  
 }
 
 Dancer.prototype.step = function() {
   var dancerToStep = this;
-  setTimeout(function() { dancerToStep.step(); }, this.timeBetweenSteps);
+    if(this.timeBetweenSteps) {
+      setTimeout(function() { dancerToStep.step(); }, this.timeBetweenSteps);
+    }
+    if(this.directFollower !== null && this.linePosition === undefined) {
+      this.directFollower.step();
+  }
 }
 
+Dancer.prototype._moveIntoLine = function() {
+  var currentPosition = this.stepHistory[this.stepHistory.currentIndex];
+  var nextTop = (currentPosition.top - this.linePosition.top) * 0.9 + this.linePosition.top;
+  var nextLeft = (currentPosition.left - this.linePosition.left) * 0.9 + this.linePosition.left;
+  this._silentSetPosition(nextTop, nextLeft);
+}
 
+Dancer.prototype.lineUp = function(targetPosition) {
+  clearActive();
+  this._positionHolder = this.stepHistory[this.stepHistory.currentIndex];
+  this.linePosition = targetPosition;
+  this._stepHolder = this.step;
+  this.step = function() { 
+    var holdTimer = this.timeBetweenSteps;
+    this.timeBetweenSteps = 20;
+    this.oldStep(); 
+    this._moveIntoLine();
+    this.timeBetweenSteps = holdTimer;
+  } 
+  if (this.$node.hasClass("follower")) {
+    this.step();
+  }
+}
+
+Dancer.prototype._silentSetPosition = function(top, left) {
+  var styleSettings = {
+      top: top,
+      left: left
+    };
+  this.stepHistory[this.stepHistory.currentIndex] = styleSettings;
+  this.$node.css(styleSettings);
+}
 
 Dancer.prototype.setPosition = function(top, left) {
   var styleSettings = {
@@ -63,6 +100,7 @@ Dancer.prototype.setPosition = function(top, left) {
       this.stepHistory.currentIndex = 0;
     }
     this.stepHistory[this.stepHistory.currentIndex] = styleSettings;
+    this.stepHistory[this.stepHistory.currentIndex].color = this.$node.css("border-color");
     this.$node.css(styleSettings);
 }
 Dancer.prototype._initHistory = function(top, left) {
@@ -72,5 +110,7 @@ Dancer.prototype._initHistory = function(top, left) {
 };
 
 Dancer.prototype.getPosition = function() {
+  
   return this.stepHistory[this.stepHistory.currentIndex];
 };
+

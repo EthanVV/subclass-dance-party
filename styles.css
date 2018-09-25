@@ -5,6 +5,7 @@ body{
   margin: 0px;
   background-color:#444;
   font-size: 18px;
+  overflow:hidden;
 }
 body, a:link, a:visited, a:active{
   color: lightblue;
@@ -24,4 +25,14 @@ body, a:link, a:visited, a:active{
   border:10px solid red;
   border-radius:10px;
   position:absolute;
+  height:0px;
+  width:0px;
+}
+
+.dancer.active{
+  background:white;
+  height:10px;
+  width:10px;
+  border-width:10px;
+  border-radius:20px;
 }
