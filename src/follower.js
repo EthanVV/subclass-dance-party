@@ -22,7 +22,7 @@ Follower.prototype.step = function() {
 }
 
 var makeFollower = function() {
-  if (currentActive) {
+  if (currentActive && !window.isLinedUp) {
     var currentLeader = currentActive;
     while(currentLeader.directFollower !== null) {
       currentLeader = currentLeader.directFollower;
