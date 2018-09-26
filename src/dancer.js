@@ -84,8 +84,10 @@ Dancer.prototype.lineUp = function(targetPosition) {
 Dancer.prototype.breakLine = function() {
   delete this._positionHolder;
   delete this.linePosition;
-  this.step = this._stepHolder;
-  delete this._stepHolder;
+  if (this._stepHolder) {
+    this.step = this._stepHolder;
+    delete this._stepHolder;
+  }
 }
 
 Dancer.prototype._silentSetPosition = function(top, left) {

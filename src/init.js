@@ -60,7 +60,7 @@ $(document).ready(function() {
   });
 
   $('.activeCycler').on('click', function(event) {
-    if (dancers.length > 0 && !isLinedUp){
+    if (dancers.length > 0){
       var activeIndex;
       if (currentActive === null) {
         activeIndex = 0;
